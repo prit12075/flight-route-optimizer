@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Leaflet popup overrides ─────────────────────────────────── */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+}
+.leaflet-container {
+  font-family: 'IBM Plex Mono', monospace;
+}
+/* Hide default Leaflet attribution styling clash */
+.leaflet-control-attribution {
+  background: rgba(10,15,30,0.7) !important;
+  color: #334155 !important;
+  font-size: 9px !important;
+}
+.leaflet-control-attribution a {
+  color: #c9a84c44 !important;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #0a0f1e;
+    color: #e2e8f0;
+    font-family: 'IBM Plex Mono', monospace;
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+  .font-mono-custom {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 12px 2px rgba(201, 168, 76, 0.35);
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 12px 2px rgba(0, 212, 255, 0.3);
+  }
+
+  .glass {
+    background: rgba(13, 20, 38, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(201, 168, 76, 0.12);
+  }
+
+  .glass-dark {
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(201, 168, 76, 0.08);
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0f1e;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9a84c44;
+  border-radius: 2px;
+}
+
+/* City pin pulse */
+@keyframes pin-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(201, 168, 76, 0); }
+}
+
+.city-pin-pulse {
+  animation: pin-pulse 2s ease-in-out infinite;
+}
