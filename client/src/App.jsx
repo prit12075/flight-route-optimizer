@@ -8,21 +8,30 @@ import CityControls from './components/Controls/CityControls';
 import RaceMode from './components/Controls/RaceMode';
 import AlgorithmPanel from './components/Algorithms/AlgorithmPanel';
 import StatsPanel from './components/Stats/StatsPanel';
+import CityListPanel from './components/Stats/CityListPanel';
 import { useCities } from './hooks/useCities';
 import { useAlgorithm } from './hooks/useAlgorithm';
 
 export default function App() {
   const { cities, addCity, removeCity, clearCities, loadPreset } = useCities();
-  const { results, loading, error, animationSteps, racing, runOptimize, startRace, replayAlgo } = useAlgorithm();
-  const [activeAlgo, setActiveAlgo] = useState('greedy');
+  const {
+    results, loading, error,
+    animationSteps, racing,
+    runOptimize, startRace, replayAlgo,
+  } = useAlgorithm();
+
+  const [activeAlgo, setActiveAlgo]       = useState('greedy');
+  const [showAllRoutes, setShowAllRoutes] = useState(false);
 
   function handleOptimize() {
     runOptimize(cities);
     setActiveAlgo('greedy');
+    setShowAllRoutes(false);
   }
 
   function handleSelectAlgo(algo) {
     setActiveAlgo(algo);
+    setShowAllRoutes(false);
     if (results?.[algo]?.route) replayAlgo(algo);
   }
 
@@ -30,11 +39,9 @@ export default function App() {
     <div className="flex flex-col min-h-screen" style={{ background: '#0a0f1e' }}>
       <Navbar />
 
-      <main
-        className="flex flex-1 gap-0 overflow-hidden"
-        style={{ height: 'calc(100vh - 65px)' }}
-      >
-        {/* Left — Map + Controls */}
+      <main className="flex flex-1 gap-0 overflow-hidden" style={{ height: 'calc(100vh - 65px)' }}>
+
+        {/* ── Left panel: map + controls ── */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -42,21 +49,19 @@ export default function App() {
           className="flex flex-col gap-3 p-4"
           style={{ width: '60%', minWidth: 0 }}
         >
-          {/* Search bar */}
           <CitySearchBar onAddCity={addCity} />
 
-          {/* Map */}
           <div className="flex-1 min-h-0">
             <LeafletMap
               cities={cities}
               results={results}
               activeAlgo={activeAlgo}
+              showAllRoutes={showAllRoutes}
               onAddCity={addCity}
               onRemoveCity={removeCity}
             />
           </div>
 
-          {/* Preset + action buttons */}
           <CityControls
             onLoadPreset={loadPreset}
             onClear={clearCities}
@@ -79,7 +84,7 @@ export default function App() {
           )}
         </motion.div>
 
-        {/* Right — Algorithms + Stats */}
+        {/* ── Right panel: algorithms + stats ── */}
         <div
           className="flex flex-col gap-3 p-4 overflow-y-auto"
           style={{
@@ -97,10 +102,17 @@ export default function App() {
               <AlgorithmPanel
                 results={results}
                 activeAlgo={activeAlgo}
+                showAllRoutes={showAllRoutes}
                 onSelectAlgo={handleSelectAlgo}
                 onReplay={replayAlgo}
+                onToggleAllRoutes={() => setShowAllRoutes((v) => !v)}
               />
               <StatsPanel results={results} />
+              <CityListPanel
+                cities={cities}
+                onRemove={removeCity}
+                onClear={clearCities}
+              />
             </>
           )}
         </div>

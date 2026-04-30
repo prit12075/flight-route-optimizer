@@ -3,7 +3,14 @@ import AlgorithmCard from './AlgorithmCard';
 
 const ALGOS = ['greedy', 'heldKarp', 'divideConquer'];
 
-export default function AlgorithmPanel({ results, activeAlgo, onSelectAlgo, onReplay }) {
+export default function AlgorithmPanel({
+  results,
+  activeAlgo,
+  showAllRoutes,
+  onSelectAlgo,
+  onReplay,
+  onToggleAllRoutes,
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -14,9 +21,16 @@ export default function AlgorithmPanel({ results, activeAlgo, onSelectAlgo, onRe
       <div className="flex items-center justify-between">
         <h2 className="font-display text-base text-slate-200 tracking-wide">Algorithms</h2>
         {results && (
-          <span className="text-[10px] font-mono text-slate-500">
-            Click a card to display its route
-          </span>
+          <button
+            onClick={onToggleAllRoutes}
+            className={`text-[10px] font-mono px-2 py-1 rounded border transition-all ${
+              showAllRoutes
+                ? 'border-gold/50 text-gold bg-gold/10'
+                : 'border-white/10 text-slate-500 hover:border-gold/30 hover:text-gold/60'
+            }`}
+          >
+            {showAllRoutes ? '⊙ All routes on' : '⊙ Show all routes'}
+          </button>
         )}
       </div>
 
